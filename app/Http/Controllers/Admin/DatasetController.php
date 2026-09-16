@@ -203,7 +203,7 @@ class DatasetController extends Controller
                     'file',
                     file_get_contents($tempCsvPath),
                     'Book3.csv'
-                )->post('http://localhost:5000/retrain');
+                )->post('https://kurniawan123.pythonanywhere.com/retrain');
 
                 if (!$response->successful()) {
                     Log::warning('Gagal melatih ulang model di Flask: ' . $response->body());

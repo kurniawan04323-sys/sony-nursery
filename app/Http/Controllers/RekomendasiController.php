@@ -53,7 +53,7 @@ class RekomendasiController extends Controller
         try {
             // Kirim data ke Flask lokal
             $response = Http::post(
-                'http://127.0.0.1:5000/predict',
+                'https://kurniawan123.pythonanywhere.com/predict',
                 $input
             );
         } catch (\Exception $e) {
