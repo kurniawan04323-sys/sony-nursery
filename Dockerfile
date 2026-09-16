@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# 1. Install dependensi sistem DAN ekstensi PHP yang dibutuhkan Laravel
+# 1. Install dependensi sistem dan ekstensi PHP
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -20,12 +20,12 @@ WORKDIR /var/www/html
 # 4. Copy seluruh file project
 COPY . /var/www/html
 
-# 5. Install vendor dependencies lewat composer
+# 5. Install vendor dependencies PHP
 RUN composer install --no-dev --optimize-autoloader
 
 # 6. Set permission folder storage & bootstrap/cache
-RUN chmod -R 777 storage bootstrap/cache
+RUN chmod -R 777 storage bootstrap/cache public
 
-# 7. Expose port & jalankan server bawaan dengan router public/index.php
+# 7. Expose port & jalankan server via artisan
 EXPOSE 8080
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "public", "public/index.php"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
