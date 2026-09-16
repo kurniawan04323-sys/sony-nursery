@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Install dependensi sistem yang dibutuhkan
+# 1. Install dependensi sistem DAN ekstensi PHP yang dibutuhkan Laravel
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -8,23 +8,24 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+    && docker-php-ext-install pdo pdo_mysql mbstring gd bcmath
 
-# Install Composer
+# 2. Copy Composer dari image resmi
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# 3. Set working directory
 WORKDIR /var/www/html
 
-# Copy seluruh file project
+# 4. Copy seluruh file project
 COPY . /var/www/html
 
-# Install vendor dependencies lewat composer
+# 5. Install vendor dependencies lewat composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permission folder storage
+# 6. Set permission folder storage & bootstrap/cache
 RUN chmod -R 777 storage bootstrap/cache
 
-# Jalankan server bawaan PHP yang langsung mengarah ke folder public
+# 7. Expose port & jalankan server bawaan dengan router public/index.php
 EXPOSE 8080
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public", "public/index.php"]
